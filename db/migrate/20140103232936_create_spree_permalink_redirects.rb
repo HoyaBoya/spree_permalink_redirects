@@ -7,7 +7,7 @@ class CreateSpreePermalinkRedirects < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :spree_permalink_redirects, :permalink
+    add_index :spree_permalink_redirects, [:permalink, :model_type],            unique: false
     add_index :spree_permalink_redirects, [:permalink, :model_id, :model_type], unique: true, name: 'id_type_permalink'
   end
 end

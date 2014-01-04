@@ -11,6 +11,19 @@ describe Spree::Product do
       product.save
     end
 
+    context 'when permalink changes reverts' do
+      it 'should not create duplicates' do
+        10.times do
+          product.permalink = 'bar'
+          product.save
+          product.permalink = 'foo'
+          product.save
+        end 
+
+        expect(Spree::PermalinkRedirect.count).to eq(2)
+      end 
+    end
+
     context 'when permalink changes' do
       it 'should create one Spree::PermalinkRedirect' do
         subject
@@ -25,6 +38,7 @@ describe Spree::Product do
       it 'should have Spree::Product as model' do
         subject
         expect(Spree::PermalinkRedirect.first.model.id).to eq(product.id)
+        expect(Spree::PermalinkRedirect.first.model).to be_a(Spree::Product)
       end
     end
 
